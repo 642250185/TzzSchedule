@@ -3,23 +3,24 @@ const mongoose = require('mongoose');
 const {defaultDay} = require('./config');
 const moment = require('moment');
 
-const getHistory = async (day) => {
+const getHistory = async (day, endDate) => {
     if(!day) {
         day = defaultDay;
     }
-    const between = moment().subtract(day, 'days').seconds(0).minutes(0).hours(0).toDate();
-    const and = moment().subtract(1, 'days').seconds(59).minutes(59).hours(23).toDate();
-    console.log(moment(between).local().format('YYYY-MM-DD HH:mm:ss'), moment(and).local().format('YYYY-MM-DD HH:mm:ss'));
+    const endMoment = endDate ? moment(endDate, 'YYYY-MM-DD') : moment();
+    const end = endMoment.subtract(1, 'days').seconds(59).minutes(59).hours(23).toDate();
+    const start = endMoment.subtract(day, 'days').seconds(0).minutes(0).hours(0).toDate();
+    console.log(moment(start).local().format('YYYY-MM-DD HH:mm:ss'), moment(end).local().format('YYYY-MM-DD HH:mm:ss'));
     return $auction.find({
         $and: [
             {
                 createTime: {
-                    $gte: between
+                    $gte: start
                 }
             },
             {
                 createTime: {
-                    $lte: and
+                    $lte: end
                 }
             }
         ]

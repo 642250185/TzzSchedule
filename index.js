@@ -8,8 +8,8 @@ const router = koaRouter();
 const {getHistory} = require('./auctionService');
 
 router.get('/history', async (ctx, next) => {
-    const {day} = ctx.request.query;
-    ctx.body = await getHistory(day);
+    const {day, endDate} = ctx.request.query;
+    ctx.body = await getHistory(day, endDate);
     await next();
 });
 
